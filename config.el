@@ -52,3 +52,20 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+
+
+;; ----------------------------------------------------------------------
+;; ---------- handle terminal copy --------------------------------------
+;; redirect copy text to file if using in terminal.
+;; iTerm2 will capture the keyword and copy the text.
+(defun my-write-text-to-copy-port (text)
+  (append-to-file "\niterm2triggercopystop\n" nil "/tmp/emacs-copy-port.txt")
+  (append-to-file "iterm2triggercopystart\n" nil "/tmp/emacs-copy-port.txt")
+  (append-to-file text nil "/tmp/emacs-copy-port.txt")
+  (append-to-file "\niterm2triggercopystop\n" nil "/tmp/emacs-copy-port.txt")
+  text)
+
+(unless (display-graphic-p)
+  (setq interprogram-cut-function 'my-write-text-to-copy-port))
+;----------------------------------------------------------------------
