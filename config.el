@@ -67,7 +67,16 @@
   (append-to-file text nil "/tmp/emacs-copy-port.txt")
   (append-to-file "\niterm2triggercopystop\n" nil "/tmp/emacs-copy-port.txt")
   text)
+;----------------------------------------------------------------------
 
 (unless (display-graphic-p)
   (setq interprogram-cut-function 'my-write-text-to-copy-port))
-;----------------------------------------------------------------------
+
+(setq browse-url-browser-function 'eww-browse-url)
+
+(map! :leader
+      :desc "Search web for text between BEG/END"
+      "s w" #'eww-search-words
+      (:prefix ("e" . "evaluate/EWW")
+       :desc "Eww web browser" "w" #'eww
+       :desc "Eww reload page" "R" #'eww-reload))
