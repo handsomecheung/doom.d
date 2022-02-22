@@ -95,3 +95,17 @@
        :desc "Open dired" "d" #'dired
        :desc "Dired jump to current" "j" #'dired-jump)
       )
+
+(defun my-repo-root-name ()
+  (file-name-sans-extension (file-name-nondirectory (directory-file-name (shell-command-to-string "git config --get remote.origin.url")))))
+
+(defun ripple/create-merge-request ()
+  "create ripple merge request from issue title."
+  (interactive)
+  (let* ((repo-name (my-repo-root-name))
+         (issue-title (read-string "Issue title: "))
+         (output (shell-command-to-string
+                  (format "ripple-gitlab.sh '%s' \"%s\"" repo-name issue-title)))
+         (response (json-read-from-string output))
+         (source-branch (cdr (assoc 'source_branch response))))
+    (message (format "branch: %s" source-branch))))
