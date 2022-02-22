@@ -89,3 +89,9 @@
      (format "shell-xargs.sh --script '%s' --prefix '%s'"
              (org-babel-process-file-name script) prefix)
      "")))
+
+(map! :leader
+      (:prefix ("d" . "dired")
+       :desc "Open dired" "d" #'dired
+       :desc "Dired jump to current" "j" #'dired-jump)
+      )
