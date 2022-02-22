@@ -64,3 +64,28 @@
       (:prefix ("e" . "evaluate/EWW")
        :desc "Eww web browser" "w" #'eww
        :desc "Eww reload page" "R" #'eww-reload))
+
+
+(defun org-babel-execute:shell-remote (body params)
+  "Execute a block of Nim code with org-babel."
+  (message "executing shell-remote source code block")
+  (let ((script (org-babel-temp-file "n" (format ".shell-remote.%s.sh" (format-time-string "%Y%m%d-%H%M%S"))))
+        (target (or (cdr (assq :target params)) "")))
+    (with-temp-file script
+      (insert body))
+    (org-babel-eval
+     (format "shell-remote.sh --script '%s' --target '%s'"
+             (org-babel-process-file-name script) target)
+     "")))
+
+(defun org-babel-execute:shell-xargs (body params)
+  "Execute a block of Nim code with org-babel."
+  (message "executing shell-remote source code block")
+  (let ((script (org-babel-temp-file "n" (format ".shell-xargs.%s.sh" (format-time-string "%Y%m%d-%H%M%S"))))
+        (prefix (or (cdr (assq :prefix params)) "")))
+    (with-temp-file script
+      (insert body))
+    (org-babel-eval
+     (format "shell-xargs.sh --script '%s' --prefix '%s'"
+             (org-babel-process-file-name script) prefix)
+     "")))
