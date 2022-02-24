@@ -96,16 +96,33 @@
        :desc "Dired jump to current" "j" #'dired-jump)
       )
 
-(defun my-repo-root-name ()
+(defun my/repo-root-name ()
   (file-name-sans-extension (file-name-nondirectory (directory-file-name (shell-command-to-string "git config --get remote.origin.url")))))
 
 (defun ripple/create-merge-request ()
   "create ripple merge request from issue title."
   (interactive)
-  (let* ((repo-name (my-repo-root-name))
+  (let* ((repo-name (my/repo-root-name))
          (issue-title (read-string "Issue title: "))
          (output (shell-command-to-string
                   (format "ripple-gitlab.sh '%s' \"%s\"" repo-name issue-title)))
          (response (json-read-from-string output))
          (source-branch (cdr (assoc 'source_branch response))))
     (message (format "branch: %s" source-branch))))
+
+
+(defun my/toggle-vterm (arg)
+  "popup vterm in current buffter's location"
+  (interactive "P")
+  (+vterm/toggle (not arg)))
+
+(defun my/toggle-vterm-here (arg)
+  "open vterm in current buffter's location"
+  (interactive "P")
+  (+vterm/here (not art)))
+
+(map! :leader
+      :desc "Toggle vterm popup" "o t" #'my/toggle-vterm         ;; overwrite default key binding
+      :desc "Open vterm here" "o T" #'my/toggle-vterm-here       ;; overwrite default key binding
+      )
+
